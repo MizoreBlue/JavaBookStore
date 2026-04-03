@@ -11,7 +11,9 @@
 <%@ include file="layout/left.jsp" %>
 
 <!-- 3. 包含中间内容 -->
-
+<div class="content" style="text-align: center;font-size: 20px">
+    <%=request.getParameter("msg")%>
+</div>
 <!-- 4. 包含底部 -->
 <%@ include file="layout/bottom.jsp" %>
 </body>

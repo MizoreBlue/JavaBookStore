@@ -7,7 +7,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet(urlPatterns = {"/", "/index", "/register", "/login", "/admin/home"})
+@WebServlet(urlPatterns = {"/", "/index", "/register", "/first", "/admin/home"})
 public class PageController extends HttpServlet {
 
     @Override
@@ -41,8 +41,10 @@ public class PageController extends HttpServlet {
             forward(req, resp, "/WEB-INF/views/client/index.jsp");
         } else if (uri.contains("/register")) {
             forward(req, resp, "/WEB-INF/views/client/register.jsp");
-        } else if (uri.contains("/login")) {
+        } else if (uri.contains("/first")) {
             forward(req, resp, "/WEB-INF/views/admin/login/first.jsp");
+        }  else if(uri.contains("/admin/home")){
+            forward(req, resp, "/WEB-INF/views/admin/home.jsp");
         } else {
             resp.sendError(404, "页面未找到: " + uri);
         }

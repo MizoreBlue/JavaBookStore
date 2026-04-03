@@ -5,7 +5,7 @@
 <div class="top-bar">
   <div class="container">
     <!-- 左侧：Logo -->
-    <a href="#" class="logo">网上书城</a>
+    <a href="${pageContext.request.contextPath}/" class="logo">网上书城</a>
 
     <!-- 右侧：链接 -->
     <div class="top-links">
