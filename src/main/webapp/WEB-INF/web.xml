@@ -7,10 +7,4 @@
 
   <display-name>JavaBookStore</display-name>
 
-  <!-- 配置欢迎页 -->
-  <welcome-file-list>
-    <welcome-file>index</welcome-file>
-  </welcome-file-list>
-
-
 </web-app>

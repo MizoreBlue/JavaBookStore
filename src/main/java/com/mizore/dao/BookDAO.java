@@ -1,0 +1,15 @@
+package com.mizore.dao;
+
+import com.mizore.entity.Book;
+
+import java.util.List;
+
+public interface BookDAO {
+
+
+    /**
+     * 查到所有书籍信息
+     * @return
+     */
+    List<Book> findAll();
+}

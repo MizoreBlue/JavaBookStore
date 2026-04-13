@@ -9,7 +9,7 @@
 
     <!-- 右侧：链接 -->
     <div class="top-links">
-      <a href="#" title="查看购物车">
+      <a href="${pageContext.request.contextPath}/cart" title="查看购物车">
         <span class="cart-icon">🛒</span> 购物车
       </a>
       <span style="color: #ccc;">|</span>
@@ -17,7 +17,7 @@
       <span style="color: #ccc;">|</span>
       <a href="#" title="我的帐户">我的帐户</a>
       <span style="color: #ccc;">|</span>
-      <a href="#" title="新用户注册">新用户注册</a>
+      <a href="${pageContext.request.contextPath}/register" title="新用户注册">新用户注册</a>
     </div>
   </div>
 </div>

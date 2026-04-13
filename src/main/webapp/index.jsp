@@ -1,1 +1,0 @@
-<script>location="/JavaBookStore/index"</script>
