@@ -1,0 +1,121 @@
+/* 页面整体背景 */
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #fff;
+    font-family: "Microsoft YaHei", Arial, sans-serif;
+}
+
+/* 注册表单的外层容器，模拟截图中的淡黄色背景 */
+.register-container {
+    width: 980px;
+    margin: 20px auto;
+    background-color: #fcf9e6; /* 淡黄色背景 */
+    padding: 20px 50px;
+    border: 1px solid #e0e0e0;
+}
+
+.register-title {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+/* 表单表格样式 */
+.register-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.register-table td {
+    padding: 8px;
+    vertical-align: middle;
+}
+
+/* 左侧标签列 */
+.td-label {
+    width: 100px;
+    text-align: right;
+    font-size: 14px;
+    font-weight: bold;
+    color: #333;
+}
+
+/* 输入框列 */
+.td-input {
+    width: 200px;
+}
+
+.td-input input[type="text"],
+.td-input input[type="password"],
+.td-input input[type="tel"] {
+    width: 180px;
+    padding: 5px;
+    border: 1px solid #aebac6;
+    outline: none;
+}
+
+.td-input input[type="text"]:focus,
+.td-input input[type="password"]:focus,
+.td-input input[type="tel"]:focus {
+    border-color: #ff8c00;
+    background-color: #fffdf5;
+}
+
+/* 性别单选框样式 */
+.gender-group {
+    display: flex;
+    align-items: center;
+    padding-top: 5px;
+}
+
+.gender-group label {
+    margin-right: 15px;
+    cursor: pointer;
+}
+
+/* 右侧提示信息列 */
+.td-tip {
+    font-size: 12px;
+    color: #999;
+    text-align: left;
+}
+
+/* 个人介绍文本域 */
+textarea {
+    width: 300px;
+    height: 80px;
+    padding: 5px;
+    border: 1px solid #aebac6;
+    resize: none;
+    vertical-align: top;
+}
+
+/* 提交按钮区域 */
+.submit-row {
+    text-align: center;
+    padding-top: 30px;
+}
+
+.btn-submit {
+    background-color: #9acd32; /* 亮绿色按钮 */
+    color: white;
+    border: none;
+    padding: 10px 30px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 4px;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+.btn-submit:hover {
+    background-color: #8bc320;
+}
+
+/* 底部虚线 */
+.bottom-dashed {
+    border-top: 1px dashed #ccc;
+    margin-top: 20px;
+}

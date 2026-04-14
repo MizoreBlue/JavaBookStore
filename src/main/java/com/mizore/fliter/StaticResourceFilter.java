@@ -47,7 +47,7 @@ public class StaticResourceFilter implements Filter {
 //
         }
 
-        // 4. 放行！非常重要
+        // 4. 放行！非常重要 放心其他非静态资源的请求到其他servlet处理
         // 如果不调用这个方法，请求就会卡在这里，页面无法显示
         chain.doFilter(request, response);
     }

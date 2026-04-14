@@ -2,7 +2,7 @@ package com.mizore.dao.impl;
 
 import com.mizore.dao.BookDAO;
 import com.mizore.entity.Book;
-import com.mizore.utils.JDBCUtils;
+import com.mizore.utils.DruidUtils;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -16,7 +16,8 @@ public class BookDAOImpl implements BookDAO {
         List<Book> bookList = new ArrayList<>();
         String sql = "SELECT * FROM book";
 
-        try (Connection conn = JDBCUtils.getConnection();
+//        从链接池获取链接
+        try (Connection conn = DruidUtils.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
 

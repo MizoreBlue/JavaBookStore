@@ -1,5 +1,7 @@
 package com.mizore.service.impl;
 
+import com.mizore.dao.BookDAO;
+import com.mizore.dao.impl.BookDAOImpl;
 import com.mizore.entity.Book;
 import com.mizore.service.BookService;
 
@@ -8,11 +10,13 @@ import java.util.List;
 public class BookServiceImpl implements BookService {
 
 
+    private BookDAO bookDAO = new BookDAOImpl();
+
     /**
      * 查找全部书籍数据
      * @return
      */
     public List<Book> findAllBooks() {
-        return null;
+        return bookDAO.findAll();
     }
 }

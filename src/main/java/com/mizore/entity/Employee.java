@@ -6,38 +6,40 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Book implements Serializable {
+public class Employee implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
     private Long id;
+
+    private String username;
 
     private String name;
 
-    private String author;
+    private String password;
 
-    private String description;
+    private String phone;
 
-    private String category;
+    private String sex;
 
-    private String image;
+    private String idNumber;
 
-    private BigDecimal price;
+    private Integer status;
 
-//    库存
-    private Integer stock;
-
-//    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    //@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createTime;
 
-//    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    //@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime updateTime;
 
     private Long createUser;
 
     private Long updateUser;
+
 }

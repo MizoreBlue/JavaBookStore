@@ -2,6 +2,8 @@ package com.mizore.servlet;
 
 import com.mizore.dao.impl.BookDAOImpl;
 import com.mizore.entity.Book;
+import com.mizore.service.BookService;
+import com.mizore.service.impl.BookServiceImpl;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -13,7 +15,8 @@ import java.util.List;
 
 @WebServlet(urlPatterns = "/product/*")
 public class ProductServlet extends HttpServlet {
-    private BookDAOImpl bookDAO = new BookDAOImpl();
+
+    private BookService bookService = new BookServiceImpl();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -26,10 +29,19 @@ public class ProductServlet extends HttpServlet {
         // 这里可以扩展 details, search 等操作
     }
 
+
+    /**
+     * 查询所有图书
+     * @param req
+     * @param resp
+     * @throws ServletException
+     * @throws IOException
+     */
     private void listBooks(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        List<Book> books = bookDAO.findAll();
+        List<Book> books = bookService.findAllBooks();
+//        设置请求体
         req.setAttribute("productList", books);
-        // 转发到首页显示
+        // 转发到首页显示 携带数据
         req.getRequestDispatcher("/WEB-INF/views/client/productList.jsp").forward(req, resp);
     }
 }
