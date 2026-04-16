@@ -17,7 +17,7 @@
 <div class="register-container">
     <div class="register-title">新用户注册</div>
 
-    <form name="registerForm" action="RegisterServlet" method="post" onsubmit="return validateForm()">
+    <form id="registerForm">
         <table class="register-table">
             <!-- 邮箱 -->
             <tr>
@@ -79,7 +79,7 @@
             <!-- 提交按钮 -->
             <tr>
                 <td colspan="3" class="submit-row">
-                    <button type="submit" class="btn-submit">同意并提交</button>
+                    <button type="button" class="btn-submit" onclick="submitRegister()">同意并提交</button>
                 </td>
             </tr>
         </table>

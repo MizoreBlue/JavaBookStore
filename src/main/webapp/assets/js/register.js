@@ -1,4 +1,5 @@
 // 简单的前端验证逻辑
+import addUser from '../../api/user.js';
 function validateForm() {
     var username = document.forms["registerForm"]["username"].value;
     var password = document.forms["registerForm"]["password"].value;
@@ -24,4 +25,36 @@ function validateForm() {
     }
 
     return true;
+}
+
+function submitRegister() {
+    // 1. 获取表单数据
+    const form = document.getElementById('registerForm');
+    const formData = new FormData(form);
+
+    // 2. 发送 AJAX 请求 (模拟 Spring Boot 的前端行为)
+    addUser(formData);
+
+
+    fetch('${pageContext.request.contextPath}/user/register', {
+        method: 'POST',
+        body: formData
+    })
+        .then(response => response.json()) // 将后端返回的流转为 JSON 对象
+        .then(data => {
+            // 3. 处理统一返回结果 Result<T>
+            if (data.code === 1) {
+                // 成功
+                alert(data.msg); // 提示 "注册成功"
+                // 跳转登录页
+                window.location.href = '${pageContext.request.contextPath}/user/login';
+            } else {
+                // 失败
+                alert(data.msg); // 提示错误信息
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('系统繁忙，请稍后再试');
+        });
 }

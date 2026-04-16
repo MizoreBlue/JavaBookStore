@@ -30,7 +30,7 @@
     <!-- 购物车为空的情况 -->
     <div class="empty-cart">
         <h3>购物车空空如也，快去选购吧！</h3>
-        <a href="product/list" class="btn-back">去购物</a>
+        <a href="${pageContext.request.contextPath}/product/list" class="btn-back">去购物</a>
     </div>
     <% } else { %>
     <!-- 购物车有商品的情况 -->
@@ -71,7 +71,7 @@
         </tbody>
     </table>
     <div style="text-align: right; margin-top: 20px;">
-        <a href="product/list" class="btn-back" style="background: #666;">继续购物</a>
+        <a href="${pageContext.request.contextPath}/product/list" class="btn-back" style="background: #666;">继续购物</a>
     </div>
     <% } %>
 </div>

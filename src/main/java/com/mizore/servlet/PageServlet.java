@@ -41,7 +41,7 @@ public class PageServlet extends HttpServlet {
         } else if ("cart".equals(action)) {
             // 注意：查看购物车通常需要先查询数据，这里只是简单跳转
             // 更好的做法是交给 CartServlet 处理查询后再转发
-            path = "/WEB-INF/views/client/shopCart.jsp";
+            path = "/WEB-INF/views/client/shop_cart.jsp";
         } else if ("admin_home".equals(action)) {
             path = "/WEB-INF/views/admin/home.jsp";
         }

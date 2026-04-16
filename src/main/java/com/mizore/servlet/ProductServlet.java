@@ -20,8 +20,8 @@ public class ProductServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-//        根据请求路径区分操作类型
-        // 获取操作类型，默认为列表
+
+        // 查看商品列表
         String uri = req.getRequestURI();
         if (uri.contains("/list")) {
             listBooks(req, resp);
@@ -42,6 +42,6 @@ public class ProductServlet extends HttpServlet {
 //        设置请求体
         req.setAttribute("productList", books);
         // 转发到首页显示 携带数据
-        req.getRequestDispatcher("/WEB-INF/views/client/productList.jsp").forward(req, resp);
+        req.getRequestDispatcher("/WEB-INF/views/client/product_list.jsp").forward(req, resp);
     }
 }

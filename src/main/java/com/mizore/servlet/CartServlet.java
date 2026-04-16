@@ -21,7 +21,13 @@ public class CartServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
         // 这里可以添加从数据库加载用户购物车的逻辑
         // 目前我们只处理 Session 中的临时购物车
-        req.getRequestDispatcher("/WEB-INF/views/client/shopCart.jsp").forward(req, resp);
+        String uri = req.getRequestURI();
+
+//        展示购物车
+        if (uri.contains("list")) {
+            req.getRequestDispatcher("/WEB-INF/views/client/shop_cart.jsp").forward(req, resp);
+        }
+
     }
 
     // POST 请求：添加商品到购物车
@@ -58,4 +64,5 @@ public class CartServlet extends HttpServlet {
         // 这里重定向回商品列表
         resp.sendRedirect(req.getContextPath() + "/product?action=list");
     }
+
 }

@@ -19,7 +19,7 @@ public class BookDAOImpl implements BookDAO {
 //        从链接池获取链接
         try (Connection conn = DruidUtils.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
+              ResultSet rs = ps.executeQuery()) {
 
             while (rs.next()) {
                 Book book = new Book();

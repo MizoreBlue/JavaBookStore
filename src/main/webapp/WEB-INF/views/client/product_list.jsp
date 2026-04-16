@@ -62,7 +62,7 @@
                         <input type="hidden" name="Image" value="${book.image}">
 
                         <!-- 数量选择 (默认为1，且不能超过库存) -->
-                        <input type="number" name="quantity" value="1" min="1" max="${book.stock}" style="width: 50px; margin-right: 5px;" ${book.stock == 0 ? 'disabled' : ''}>
+                        <input type="number" name="quantity" value="1" min="1" max="${book.stock}" style="width: 30px; margin-right: 5px;" ${book.stock == 0 ? 'disabled' : ''}>
 
                         <button type="submit" class="btn-cart" ${book.stock == 0 ? 'disabled' : ''}>
                             加入购物车
