@@ -91,4 +91,6 @@
 <%@include file="../common/foot.jsp"%>
 
 </body>
+<script>
+</script>
 </html>

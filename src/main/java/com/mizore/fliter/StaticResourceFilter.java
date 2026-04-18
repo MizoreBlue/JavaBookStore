@@ -27,29 +27,24 @@ public class StaticResourceFilter implements Filter {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         HttpServletResponse httpResponse = (HttpServletResponse) response;
 
-        // 2. 获取请求的 URI (例如: /JavaBookStore/assets/css/common.css)
         String uri = httpRequest.getRequestURI();
 
+        //        处理POST 请求乱码
+        httpRequest.setCharacterEncoding("UTF-8");
+
         // 3. 判断是否为静态资源
-        // 如果 URI 包含这些后缀，我们就认为它是静态资源
         if (isStaticResource(uri)) {
-            // --- 你的核心逻辑：设置缓存头 ---
-            // max-age=3600 表示浏览器缓存 3600秒 (1小时)
-            // 在此期间，浏览器不会向服务器发送请求，直接读本地缓存，极大提升加载速度
-//            TODO 设置缓存头
-//            httpResponse.setHeader("Cache-Control", "max-age=3600");
 
             // 可选：如果你希望浏览器永远不缓存（开发调试阶段），可以设置为：
             httpResponse.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
-            RequestDispatcher rd = request.getServletContext().getNamedDispatcher("default");
-            rd.forward(request, response);
+            RequestDispatcher rd = httpRequest.getServletContext().getNamedDispatcher("default");
+            rd.forward(httpRequest, httpResponse);
             return;
 //
         }
 
         // 4. 放行！非常重要 放心其他非静态资源的请求到其他servlet处理
-        // 如果不调用这个方法，请求就会卡在这里，页面无法显示
-        chain.doFilter(request, response);
+        chain.doFilter(httpRequest, httpResponse);
     }
 
     public void destroy() {

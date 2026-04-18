@@ -41,19 +41,13 @@ public class UserDAOImpl implements UserDAO {
             // executeUpdate 返回的是受影响的行数（int）
             int rows = pstmt.executeUpdate();
 
-            // 5. 判断结果
-            if (rows > 0) {
-                System.out.println("注册成功！");
 
-                // 【进阶技巧】获取数据库生成的自增主键 ID
-                // 如果 insert 成功，通常我们需要知道这个用户的 ID 是多少
-                ResultSet generatedKeys = pstmt.getGeneratedKeys();
-                if (generatedKeys.next()) {
-                    long generatedId = generatedKeys.getLong(1);
-                    user.setId(generatedId); // 将生成的 ID 回填到 User 对象中
-                    System.out.println("生成的用户ID为: " + generatedId);
-                }
-            }
+//           if (rows > 0) {
+//               ResultSet generatedKeys = pstmt.getGeneratedKeys();
+//               if (generatedKeys.next()) {
+//                   user.setId(generatedKeys.getLong(1));
+//               }
+//           }
         } catch (SQLException e) {
             // 6. 异常处理
             e.printStackTrace();
@@ -65,6 +59,7 @@ public class UserDAOImpl implements UserDAO {
 
     /**
      * 根据用户名称获取用户信息
+     *
      * @param username
      * @return
      */
@@ -72,8 +67,8 @@ public class UserDAOImpl implements UserDAO {
         String sql = "SELECT * FROM user WHERE username = ?";
         User user = new User();
 
-        try(Connection conn = DruidUtils.getConnection();
-            PreparedStatement pstmt = conn.prepareStatement(sql)){
+        try (Connection conn = DruidUtils.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
 //            设置参数
             pstmt.setString(1, username);
@@ -85,7 +80,7 @@ public class UserDAOImpl implements UserDAO {
                 user.setPhone(rs.getString("phone"));
                 user.setEmail(rs.getString("email"));
             }
-            return  user;
+            return user;
         } catch (SQLException e) {
 //            打印异常堆栈
             e.printStackTrace();

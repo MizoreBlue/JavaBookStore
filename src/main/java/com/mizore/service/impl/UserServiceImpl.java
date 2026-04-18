@@ -19,9 +19,18 @@ public class UserServiceImpl implements UserService {
      * 用户注册
      * @param user
      */
-    public void register(User user) {
-        userDAO.register(user);
-    }
+    public boolean register(User user) {
+//        调用DAO 层，验证是否可以注册
+        User user1 = userDAO.getUser(user.getUsername());
+        if (user1.getUsername() != null) {
+//            用户已存在 返回错误
+            return false;
+        } else {
+//            添加用户数据到数据库
+            userDAO.register(user);
+            return true;
+        }
+     }
 
 
     /**

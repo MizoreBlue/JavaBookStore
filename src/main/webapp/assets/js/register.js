@@ -1,60 +1,69 @@
 // 简单的前端验证逻辑
-import addUser from '../../api/user.js';
 function validateForm() {
+    // 修正：HTML 中 name="telephone"，所以这里也要取 telephone
     var username = document.forms["registerForm"]["username"].value;
     var password = document.forms["registerForm"]["password"].value;
-    var email = document.forms["registerForm"]["email"].value;
+    var telephone = document.forms["registerForm"]["telephone"].value;
 
-    // 用户名验证：字母数字下划线1到10位，不能是数字开头
+    // 用户名验证
     var usernameRegex = /^[a-zA-Z_][a-zA-Z0-9_]{0,9}$/;
     if (!usernameRegex.test(username)) {
         alert("用户名必须是字母、数字或下划线，1-10位，且不能以数字开头！");
-        return false;
+        return false; // 返回 false 阻止表单提交
     }
 
-    // 密码验证：6-16位
+    // 密码验证
     if (password.length < 6 || password.length > 16) {
         alert("密码长度必须在6到16位之间！");
         return false;
     }
 
-    // 简单邮箱验证
-    if(email.indexOf('@') === -1) {
-        alert("请输入有效的邮箱地址！");
+    // 手机号验证 (如果是必填)
+    if (telephone.length !== 11) {
+        alert("请输入正确的11位手机号！");
         return false;
     }
 
-    return true;
+    // 验证通过，执行 AJAX 提交
+    submitRegister();
+
+    // 返回 false，阻止表单的默认同步提交（即阻止页面刷新）
+    return false;
 }
 
 function submitRegister() {
-    // 1. 获取表单数据
     const form = document.getElementById('registerForm');
-    const formData = new FormData(form);
+    // 使用 URLSearchParams 构造表单数据
+    const formData = new URLSearchParams(new FormData(form));
 
-    // 2. 发送 AJAX 请求 (模拟 Spring Boot 的前端行为)
-    addUser(formData);
-
-
-    fetch('${pageContext.request.contextPath}/user/register', {
+    fetch("/user/register", {
         method: 'POST',
-        body: formData
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: formData.toString()
     })
-        .then(response => response.json()) // 将后端返回的流转为 JSON 对象
+        .then(response => {
+            if (!response.ok) throw new Error("网络响应错误");
+            return response.json();
+        })
         .then(data => {
-            // 3. 处理统一返回结果 Result<T>
+            // 根据截图，后端返回的消息在 data.msg 或 data.data 中
+            // 你的截图显示: {"code":1, "msg":null, "data":"注册成功，请登录"}
+            // 所以这里应该取 data.data
+
             if (data.code === 1) {
-                // 成功
-                alert(data.msg); // 提示 "注册成功"
-                // 跳转登录页
-                window.location.href = '${pageContext.request.contextPath}/user/login';
+                alert(data.data || "注册成功！");
+                // 注册成功 -> 跳转到登录页
+                window.location.href = "login";
             } else {
-                // 失败
-                alert(data.msg); // 提示错误信息
+                alert(data.data || "注册失败");
+                // 注册失败 -> 刷新当前页或留在注册页
+                // window.location.href = "register"; // 可选
             }
         })
         .catch(error => {
-            console.error('Error:', error);
-            alert('系统繁忙，请稍后再试');
+            console.error("Error:", error);
+            alert("系统错误，请查看控制台");
         });
 }
