@@ -1,4 +1,4 @@
-package com.mizore.servlet;
+package com.mizore.servlet.user;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
