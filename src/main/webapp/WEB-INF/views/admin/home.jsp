@@ -8,7 +8,7 @@
 <%@ include file="layout/top.jsp" %>
 
 <!-- 2. 包含左侧菜单 -->
-<%@ include file="layout/left.jsp" %>
+<%@ include file="../common/left.jsp" %>
 
 <!-- 3. 包含中间内容 -->
 <div class="content" style="text-align: center;font-size: 20px">
