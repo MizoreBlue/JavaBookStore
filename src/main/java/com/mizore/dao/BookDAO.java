@@ -12,4 +12,12 @@ public interface BookDAO {
      * @return
      */
     List<Book> findAll();
+
+
+    /**
+     * 插入一条数据
+     * @param book
+     * @return
+     */
+    boolean insert(Book book);
 }

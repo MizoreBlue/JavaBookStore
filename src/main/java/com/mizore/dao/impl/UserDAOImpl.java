@@ -29,13 +29,7 @@ public class UserDAOImpl implements UserDAO {
             pstmt.setString(4, user.getEmail());
             pstmt.setString(5, user.getSex());
             pstmt.setString(6, user.getAvatar());
-
-            // 处理时间类型：java.time.LocalDateTime 转 java.sql.Timestamp
-            if (user.getCreateTime() != null) {
-                pstmt.setTimestamp(7, Timestamp.valueOf(user.getCreateTime()));
-            } else {
-                pstmt.setTimestamp(7, Timestamp.valueOf(LocalDateTime.now())); // 如果没传时间，默认当前时间
-            }
+            pstmt.setTimestamp(7, Timestamp.valueOf(LocalDateTime.now()));
 
             // 4. 执行 SQL
             // executeUpdate 返回的是受影响的行数（int）

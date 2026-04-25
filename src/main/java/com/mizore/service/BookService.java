@@ -12,4 +12,11 @@ public interface BookService {
      */
     List<Book> findAllBooks();
 
+
+    /**
+     * 插入一条数据
+     * @param book
+     * @return
+     */
+    boolean insert(Book book);
 }
