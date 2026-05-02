@@ -82,4 +82,45 @@ public class BookDAOImpl implements BookDAO {
 
         return false;
     }
+
+
+    /**
+     * 模糊查询
+     * @param keyword
+     * @return
+     */
+    public List<Book> findByKeyword(String keyword) {
+
+//        准备查询语句
+        String sql = "SELECT * FROM book WHERE name LIKE ?";
+
+        List<Book> bookList = new ArrayList<>();
+
+        try(Connection connection = DruidUtils.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(sql)
+        ) {
+//            防止sql 注入
+            preparedStatement.setString(1, "%"+keyword+"%");
+            ResultSet rs = preparedStatement.executeQuery();
+
+//            封装数据
+            while (rs.next()) {
+                Book book = new Book();
+                book.setId(rs.getLong("id"));
+                book.setName(rs.getString("name"));
+                book.setAuthor(rs.getString("author"));
+                book.setPrice(rs.getBigDecimal("price"));
+                book.setDescription(rs.getString("description"));
+                book.setCategory(rs.getString("category"));
+                book.setImage(rs.getString("image"));
+                book.setStock(rs.getInt("stock"));
+
+                bookList.add(book);
+            }
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return bookList;
+    }
 }

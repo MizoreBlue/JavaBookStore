@@ -21,7 +21,7 @@
     <h2>购物车详情</h2>
 
     <%
-        // 1. 从 session 获取购物车集合 TODO 采用数据库实现购物车
+        // 1. 从 session 获取购物车集
         List<Map<String, String>> cart = (List<Map<String, String>>) session.getAttribute("cart");
     %>
 

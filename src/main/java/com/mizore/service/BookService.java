@@ -19,4 +19,12 @@ public interface BookService {
      * @return
      */
     boolean insert(Book book);
+
+
+    /**
+     * 模糊查询
+     * @param keyword
+     * @return
+     */
+    List<Book> findBookByKeyword(String keyword);
 }

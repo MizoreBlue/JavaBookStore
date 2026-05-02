@@ -20,4 +20,12 @@ public interface BookDAO {
      * @return
      */
     boolean insert(Book book);
+
+
+    /**
+     * 模糊查询
+     * @param keyword
+     * @return
+     */
+    List<Book> findByKeyword(String keyword);
 }

@@ -31,4 +31,14 @@ public class BookServiceImpl implements BookService {
     public boolean insert(Book book) {
         return bookDAO.insert(book);
     }
+
+
+    /**
+     * 模糊查询图书
+     * @param keyword
+     * @return
+     */
+    public List<Book> findBookByKeyword(String keyword) {
+        return bookDAO.findByKeyword(keyword);
+    }
 }

@@ -30,7 +30,18 @@ public class ProductServlet extends HttpServlet {
             req.getRequestDispatcher("/WEB-INF/views/client/product_list.jsp").forward(req, resp);
 
         }
-        // 这里可以扩展 details, search 等操作
+
+
+//        查询商品
+        if (uri.contains("/search")) {
+//            请求参数
+            String keyword = req.getParameter("keyword");
+//            模糊查询结果
+            List<Book> bookList = bookService.findBookByKeyword(keyword);
+            req.setAttribute("productList", bookList);
+//            结合数据返回页面 ssr
+            req.getRequestDispatcher("/WEB-INF/views/client/product_list.jsp").forward(req, resp);
+        }
     }
 
 

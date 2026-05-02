@@ -25,9 +25,9 @@
 
         <!-- 右侧：搜索框 -->
         <div class="search-section">
-            <form action="#" method="get">
+            <form action="<%=request.getContextPath()%>/product/search" method="get">
                 <label for="searchInput">Search</label>
-                <input type="text" id="searchInput" class="search-input" placeholder="请输入书名">
+                <input type="text" id="searchInput" name="keyword" class="search-input" placeholder="请输入书名">
                 <button type="submit" class="search-btn">搜索</button>
             </form>
         </div>

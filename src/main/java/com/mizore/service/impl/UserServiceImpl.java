@@ -39,9 +39,8 @@ public class UserServiceImpl implements UserService {
      */
     public boolean login(User user) {
         User u = userDAO.getUser(user.getUsername());
-
-        if (u != null) {
-//            比对用户密码
+        if(u!=null && u.getUsername()!=null) {
+//            比对密码
             return u.getPassword().equals(user.getPassword());
         }
         return false;

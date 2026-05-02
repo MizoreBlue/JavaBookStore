@@ -36,12 +36,12 @@ public class UserDAOImpl implements UserDAO {
             int rows = pstmt.executeUpdate();
 
 
-//           if (rows > 0) {
-//               ResultSet generatedKeys = pstmt.getGeneratedKeys();
-//               if (generatedKeys.next()) {
-//                   user.setId(generatedKeys.getLong(1));
-//               }
-//           }
+           if (rows > 0) {
+               ResultSet generatedKeys = pstmt.getGeneratedKeys();
+               if (generatedKeys.next()) {
+                   user.setId(generatedKeys.getLong(1));
+               }
+           }
         } catch (SQLException e) {
             // 6. 异常处理
             e.printStackTrace();
