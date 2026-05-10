@@ -47,7 +47,7 @@
              name="mainFrame"：这是关键，左侧菜单的 target 必须指向这个名字
              src="product_list.jsp"：默认加载的页面
         -->
-        <iframe name="mainFrame" src="product/list"></iframe>
+        <iframe name="mainFrame" src="<%=request.getContextPath()%>backend/product/list"></iframe>
     </div>
 
 </div>

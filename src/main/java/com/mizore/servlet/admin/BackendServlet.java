@@ -9,7 +9,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
-@WebServlet(urlPatterns = "/backend/")
+@WebServlet(urlPatterns = "/backend")
 public class BackendServlet extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -18,7 +18,7 @@ public class BackendServlet extends HttpServlet {
         String uri = request.getRequestURI();
 
 //        截取请求路径
-        uri = uri.replace("/backend/", "/");
+        uri = uri.replace("/backend", "/");
 
         if(uri.equals("/")){
 //            转发到后端首页

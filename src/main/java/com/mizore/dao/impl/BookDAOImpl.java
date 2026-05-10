@@ -89,7 +89,7 @@ public class BookDAOImpl implements BookDAO {
      * @param keyword
      * @return
      */
-    public List<Book> findByKeyword(String keyword) {
+    public List<Book>   findByKeyword(String keyword) {
 
 //        准备查询语句
         String sql = "SELECT * FROM book WHERE name LIKE ?";
