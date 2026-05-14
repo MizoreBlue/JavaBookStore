@@ -25,7 +25,7 @@ public class BookDAOImpl implements BookDAO {
                 Book book = new Book();
 
 //               设置返回的数据
-                book.setId(rs.getLong("id"));
+                book.setId(rs.getString("id"));
                 book.setName(rs.getString("name")); // 对应数据库字段
                 book.setAuthor(rs.getString("author"));
                 book.setPrice(new java.math.BigDecimal(rs.getString("price")));
@@ -106,7 +106,7 @@ public class BookDAOImpl implements BookDAO {
 //            封装数据
             while (rs.next()) {
                 Book book = new Book();
-                book.setId(rs.getLong("id"));
+                book.setId(rs.getString("id"));
                 book.setName(rs.getString("name"));
                 book.setAuthor(rs.getString("author"));
                 book.setPrice(rs.getBigDecimal("price"));

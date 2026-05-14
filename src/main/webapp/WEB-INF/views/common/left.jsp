@@ -58,7 +58,7 @@
 
         <!-- 销售榜单 -->
         <li class="menu-item">
-            <a href="#" class="menu-link">
+            <a href="<%=path%>/backend/sales/list" target="mainFrame" class="menu-link">
                 <span class="menu-icon">📊</span>
                 销售榜单
             </a>
@@ -66,7 +66,7 @@
 
         <!-- 订单管理 -->
         <li class="menu-item">
-            <a href="#" class="menu-link">
+            <a href="#" class="menu-link" target="mainFrame">
                 <span class="menu-icon">📝</span>
                 订单管理
             </a>
@@ -74,7 +74,7 @@
 
         <!-- 公告管理 -->
         <li class="menu-item">
-            <a href="#" class="menu-link">
+            <a href="#" class="menu-link" target="mainFrame">
                 <span class="menu-icon">📢</span>
                 公告管理
             </a>

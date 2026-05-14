@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -14,7 +13,8 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Book implements Serializable {
-    private Long id;
+    // 根据插入数据，ID 是 UUID 字符串格式
+    private String id;
 
     private String name;
 
@@ -28,13 +28,11 @@ public class Book implements Serializable {
 
     private BigDecimal price;
 
-//    库存
+    // 库存
     private Integer stock;
 
-//    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createTime;
 
-//    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime updateTime;
 
     private Long createUser;

@@ -9,6 +9,16 @@
   <url>http://maven.apache.org</url>
   <build>
     <finalName>JavaBookStore</finalName>
+      <plugins>
+          <plugin>
+              <groupId>org.apache.maven.plugins</groupId>
+              <artifactId>maven-compiler-plugin</artifactId>
+              <configuration>
+                  <source>9</source>
+                  <target>9</target>
+              </configuration>
+          </plugin>
+      </plugins>
   </build>
 
   <dependencies>
@@ -37,6 +47,19 @@
           <groupId>com.fasterxml.jackson.core</groupId>
           <artifactId>jackson-databind</artifactId>
           <version>2.15.2</version>
+      </dependency>
+
+      <!-- poi -->
+      <dependency>
+          <groupId>org.apache.poi</groupId>
+          <artifactId>poi</artifactId>
+          <version>3.16</version>
+      </dependency>
+
+      <dependency>
+          <groupId>org.apache.poi</groupId>
+          <artifactId>poi-ooxml</artifactId>
+          <version>3.16</version>
       </dependency>
 
     <!-- Druid 数据库连接池依赖 -->
