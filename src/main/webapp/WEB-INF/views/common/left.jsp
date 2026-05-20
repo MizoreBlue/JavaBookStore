@@ -66,7 +66,7 @@
 
         <!-- 订单管理 -->
         <li class="menu-item">
-            <a href="#" class="menu-link" target="mainFrame">
+            <a href="<%=path%>/backend/order/list" class="menu-link" target="mainFrame">
                 <span class="menu-icon">📝</span>
                 订单管理
             </a>

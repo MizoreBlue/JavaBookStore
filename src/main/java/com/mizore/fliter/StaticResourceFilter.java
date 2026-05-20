@@ -37,10 +37,24 @@ public class StaticResourceFilter implements Filter {
 
             // 可选：如果你希望浏览器永远不缓存（开发调试阶段），可以设置为：
             httpResponse.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
-            RequestDispatcher rd = httpRequest.getServletContext().getNamedDispatcher("default");
-            rd.forward(httpRequest, httpResponse);
+//            直接放行给tomcat 默认的servlet处理
+            chain.doFilter(request, response);
             return;
 //
+        }
+
+//        判断是否为管理端根目录 /backend/
+        if (uri.equals("/backend")||uri.equals("/backend/")) {
+//            直接响应首页
+            request.getRequestDispatcher("/WEB-INF/views/admin/home.jsp").forward(request,response);
+            return;
+        }
+
+//        判断是否为用户端首页
+        if (uri.equals("/") || uri.isEmpty()) {
+//            响应用户端首页
+            request.getRequestDispatcher("/WEB-INF/views/client/index.jsp").forward(request,response);
+            return;
         }
 
         // 4. 放行！非常重要 放心其他非静态资源的请求到其他servlet处理

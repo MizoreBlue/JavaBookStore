@@ -17,7 +17,7 @@ import java.util.List;
 /**
  * 销售榜单
  */
-@WebServlet("/backend/sales/*")
+@WebServlet(urlPatterns = "/backend/sales/*")
 public class SalesRakingServlet extends HttpServlet {
 
     private SalesService salesService = new SalesServiceImpl();
