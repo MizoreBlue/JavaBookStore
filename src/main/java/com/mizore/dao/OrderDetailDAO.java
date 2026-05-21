@@ -12,5 +12,5 @@ public interface OrderDetailDAO {
      * @param orderIds
      * @return
      */
-    List<OrderDetail> getByOrderIds(List<String> orderIds);
+    List<OrderDetail> getByOrderIds(List<Long> orderIds);
 }

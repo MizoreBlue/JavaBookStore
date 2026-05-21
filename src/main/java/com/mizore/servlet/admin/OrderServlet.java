@@ -33,8 +33,8 @@ public class OrderServlet extends HttpServlet {
 
 //        查询订单列表
         if (uri.contains("/list")) {
-            List<OrderVo> ordersList =  orderService.getAllOrders();
-            request.setAttribute("ordersList", ordersList);
+            List<OrderVo> orderVOList =  orderService.getAllOrders();
+            request.setAttribute("orderVOList", orderVOList);
             request.getRequestDispatcher("/WEB-INF/views/admin/order_list.jsp").forward(request, response);
         }
 

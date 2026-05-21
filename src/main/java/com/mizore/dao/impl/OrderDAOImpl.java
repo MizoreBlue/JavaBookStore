@@ -5,7 +5,6 @@ import com.mizore.dao.OrderDAO;
 import com.mizore.dao.OrderDetailDAO;
 import com.mizore.entity.Orders;
 import com.mizore.utils.DruidUtils;
-import org.apache.commons.beanutils.BeanUtils;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -33,12 +32,12 @@ public class OrderDAOImpl implements OrderDAO {
             List<Orders> list = new ArrayList<>();
             while (resultSet.next()) {
                 Orders orders = new Orders();
-                orders.setId(resultSet.getString("Id"));
-                orders.setTotalAmount(resultSet.getBigDecimal("totalAmount"));
+                orders.setId(resultSet.getLong("id"));
+                orders.setTotalAmount(resultSet.getBigDecimal("total_amount"));
                 orders.setAddress(resultSet.getString("address"));
-                orders.setReceiverName(resultSet.getString("receiverName"));
-                orders.setReceiverPhone(resultSet.getString("receiverPhone"));
-                orders.setUserId(resultSet.getLong(resultSet.getString("userId")));
+                orders.setReceiverName(resultSet.getString("receiver_name"));
+                orders.setReceiverPhone(resultSet.getString("receiver_phone"));
+                orders.setUserId(resultSet.getLong("user_id"));
                 orders.setStatus(resultSet.getInt("status"));
 
                 list.add(orders);

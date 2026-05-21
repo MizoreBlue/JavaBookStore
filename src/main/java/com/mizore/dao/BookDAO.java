@@ -28,4 +28,13 @@ public interface BookDAO {
      * @return
      */
     List<Book> findByKeyword(String keyword);
+
+
+    /**
+     *
+     * 根据id获取数据
+     * @param bookId
+     * @return
+     */
+    Book findById(Long bookId);
 }

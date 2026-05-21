@@ -57,7 +57,7 @@ public class StaticResourceFilter implements Filter {
             return;
         }
 
-        // 4. 放行！非常重要 放心其他非静态资源的请求到其他servlet处理
+        // 4. 放行其他非静态资源的请求到其他servlet处理
         chain.doFilter(httpRequest, httpResponse);
     }
 

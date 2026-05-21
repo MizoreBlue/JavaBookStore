@@ -36,37 +36,46 @@ public class OrderServiceImpl implements OrderService {
      */
     public List<OrderVo> getAllOrders(){
 
+//        TODO 一个订单对应多条订单详情，一条详情对应一本书籍
+
         List<OrderVo> orderVoList = new ArrayList<>();
 
 //        获取所有的订单
         List<Orders> ordersList =  orderDAO.getAllOrders();
 
 //        获得所有的订单Id
-        List<String> orderIds = ordersList.stream()
+        List<Long> orderIds = ordersList.stream()
                 .map(Orders::getId)
                 .collect(Collectors.toList());
 
-//        批量查询所有订单明细
+//        获取所有订单明细
         List<OrderDetail> allDetails = orderDetailDAO.getByOrderIds(orderIds);
 
-//        按照订单Id分组,便于查找
-        Map<String, List<OrderDetail>> detailMap = allDetails.stream()
+        for (OrderDetail orderDetail : allDetails) {
+//            根据bookId查询书籍
+            Book book = bookDAO.findById(orderDetail.getBookId());
+
+//            设置书籍对象
+            orderDetail.setBook(book);
+        }
+
+//        按照订单Id对订单明细进行分组,便于查找
+        Map<Long, List<OrderDetail>> idToDetaiMap = allDetails.stream()
                 .collect(Collectors.groupingBy(OrderDetail::getOrderId));
 
 //        组装 OrderVo
         for(Orders orders : ordersList) {
             OrderVo orderVo = new OrderVo();
-            BeanUtils.copyProperties(orders, orderVo);
-            List<OrderDetail> orderDetails = detailMap.getOrDefault(orders.getId(), Collections.emptyList());
+//            设置订单详信息
+            orderVo.setOrders(orders);
 
+//            获取一条定单对应的订单明细集合
+            List<OrderDetail> orderDetails = idToDetaiMap.getOrDefault(orders.getId(), Collections.emptyList());
 
-//            TODO 待修改 返回所有订单详细信息
             orderVo.setOrderDetailList(orderDetails);
             orderVoList.add(orderVo);
         }
 
-//        根据订单Id批量查询
-
-        return List.of();
+        return orderVoList;
     }
 }

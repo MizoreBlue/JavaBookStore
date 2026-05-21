@@ -19,13 +19,13 @@ public class BookDAOImpl implements BookDAO {
 //        从链接池获取链接
         try (Connection conn = DruidUtils.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql);
-              ResultSet rs = ps.executeQuery()) {
+             ResultSet rs = ps.executeQuery()) {
 
             while (rs.next()) {
                 Book book = new Book();
 
 //               设置返回的数据
-                book.setId(rs.getString("id"));
+                book.setId(rs.getLong("id"));
                 book.setName(rs.getString("name")); // 对应数据库字段
                 book.setAuthor(rs.getString("author"));
                 book.setPrice(new java.math.BigDecimal(rs.getString("price")));
@@ -46,6 +46,7 @@ public class BookDAOImpl implements BookDAO {
 
     /**
      * 插入一条数据
+     *
      * @param book
      * @return
      */
@@ -56,9 +57,8 @@ public class BookDAOImpl implements BookDAO {
 
 
 //        获得 JDBC链接
-        try(Connection connection = DruidUtils.getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement(sql))
-        {
+        try (Connection connection = DruidUtils.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setString(1, book.getName());
             preparedStatement.setString(2, book.getAuthor());
             preparedStatement.setBigDecimal(3, book.getPrice());
@@ -86,41 +86,74 @@ public class BookDAOImpl implements BookDAO {
 
     /**
      * 模糊查询
+     *
      * @param keyword
      * @return
      */
-    public List<Book>   findByKeyword(String keyword) {
+    public List<Book> findByKeyword(String keyword) {
 
 //        准备查询语句
         String sql = "SELECT * FROM book WHERE name LIKE ?";
 
         List<Book> bookList = new ArrayList<>();
 
-        try(Connection connection = DruidUtils.getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement(sql)
+        try (Connection connection = DruidUtils.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)
         ) {
 //            防止sql 注入
-            preparedStatement.setString(1, "%"+keyword+"%");
+            preparedStatement.setString(1, "%" + keyword + "%");
             ResultSet rs = preparedStatement.executeQuery();
 
 //            封装数据
             while (rs.next()) {
                 Book book = new Book();
-                book.setId(rs.getString("id"));
-                book.setName(rs.getString("name"));
-                book.setAuthor(rs.getString("author"));
-                book.setPrice(rs.getBigDecimal("price"));
-                book.setDescription(rs.getString("description"));
-                book.setCategory(rs.getString("category"));
-                book.setImage(rs.getString("image"));
-                book.setStock(rs.getInt("stock"));
+                setBookAttrs(book, rs);
 
                 bookList.add(book);
             }
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return bookList;
+    }
+
+
+    /**
+     * 根据id获取数据
+     *
+     * @param bookId
+     * @return
+     */
+    public Book findById(Long bookId) {
+        String sql = "SELECT * FROM book WHERE id = ?";
+        Book book = new Book();
+        try (
+                Connection connection = DruidUtils.getConnection();
+                PreparedStatement preparedStatement = connection.prepareStatement(sql)
+        ) {
+//            设置参数
+            preparedStatement.setLong(1, bookId);
+            ResultSet rs = preparedStatement.executeQuery();
+            while (rs.next()) {
+                setBookAttrs(book, rs);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return book;
+    }
+
+
+//    设置属性
+    private void setBookAttrs(Book book, ResultSet rs) throws SQLException {
+        book.setId(rs.getLong("id"));
+        book.setName(rs.getString("name"));
+        book.setAuthor(rs.getString("author"));
+        book.setPrice(rs.getBigDecimal("price"));
+        book.setDescription(rs.getString("description"));
+        book.setCategory(rs.getString("category"));
+        book.setImage(rs.getString("image"));
+        book.setStock(rs.getInt("stock"));
     }
 }

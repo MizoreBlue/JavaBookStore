@@ -14,8 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Orders implements Serializable {
-    // 根据插入数据，ID 是 UUID 字符串格式
-    private String id;
+    private Long id;
 
     // 订单总金额 (对应插入数据的 44.5, 59, 89)
     private BigDecimal totalAmount;

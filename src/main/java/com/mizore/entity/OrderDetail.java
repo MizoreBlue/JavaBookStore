@@ -4,19 +4,37 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import java.io.Serializable;
 
+import java.io.Serializable;
+import java.math.BigDecimal;
+
+/**
+ * 订单明细
+ */
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class OrderDetail implements Serializable {
-    // 关联的订单ID
-    private String orderId;
 
-    // 关联的图书ID
-    private String bookId;
+    private static final long serialVersionUID = 1L;
 
-    // 购买数量 (对应插入数据的 1)
-    private Integer quantity;
+    private Long id;
+
+    //订单id
+    private Long orderId;
+
+    //书籍id
+    private Long bookId;
+
+    private Book book;
+
+    //数量
+    private Integer number;
+
+    //金额
+    private BigDecimal amount;
+
+    //图片
+    private String image;
 }

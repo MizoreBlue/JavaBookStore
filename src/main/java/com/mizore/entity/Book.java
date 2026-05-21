@@ -13,8 +13,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Book implements Serializable {
-    // 根据插入数据，ID 是 UUID 字符串格式
-    private String id;
+    private Long id;
 
     private String name;
 
