@@ -135,128 +135,70 @@
 </div>
 
 <!-- 订单详情模态框 (Modal) -->
-<div class="modal fade" id="detailModal" tabindex="-1" aria-labelledby="detailModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="detailModalLabel">订单详情 - <span id="modalOrderId"></span></h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <table class="table table-bordered">
-                    <thead>
-                    <tr>
-                        <th>书籍图片</th>
-                        <th>书籍名称</th>
-                        <th>数量</th>
-                        <th>单价</th>
-                        <th>小计</th>
-                    </tr>
-                    </thead>
-                    <tbody id="modalDetailBody">
-                    <!-- 动态内容由 JavaScript 插入 -->
-                    </tbody>
-                </table>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
-            </div>
-        </div>
+<div id="orderDetailModal" style="display: none; position: fixed; top: 10%; left: 50%; transform: translateX(-50%); width: 600px; background: white; border: 1px solid #ccc; box-shadow: 0 4px 8px rgba(0,0,0,0.2); z-index: 1000; padding: 20px; border-radius: 5px;">
+    <h3>订单详情 <span style="float: right; cursor: pointer;" onclick="closeModal()">×</span></h3>
+    <hr>
+    <div id="detailContent">
+        <!-- 书籍列表将通过 JS 动态插入到这里 -->
     </div>
 </div>
-
+<!-- 遮罩层 -->
+<div id="modalBackdrop" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 999;"></div>
 <!-- 引入 Bootstrap Bundle (包含 Popper) -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-    // 模拟数据或通过后端接口获取详情
-    // 这里为了演示，直接使用 JSP 输出的 JSON 数据结构
-    const allOrderData = {
-        <c:forEach items="${orderVOList}" var="orderVo" varStatus="status">
-        "${orderVo.orders.id}": [
-            <c:forEach items="${orderVo.orderDetailList}" var="detail" varStatus="detailStatus">
-            {
-                "bookName": "${detail.book.name}", // 假设 OrderDetail 关联了 Book 对象或有 name 属性
-                "image": "${detail.image}",
-                "number": ${detail.number},
-                "amount": ${detail.amount}
-            }<c:if test="${!detailStatus.last}">,</c:if>
-            </c:forEach>
-        ]<c:if test="${!status.last}">,</c:if>
-        </c:forEach>
-    };
+    // 1. 定义一个函数来显示模态框并填充数据
+    function showOrderDetail(orderId, orderDetails) {
+        // 获取模态框和遮罩层元素
+        var modal = document.getElementById('orderDetailModal');
+        var backdrop = document.getElementById('modalBackdrop');
+        var contentDiv = document.getElementById('detailContent');
 
-    // 加载订单详情到模态框
-    function loadOrderDetails(orderId) {
-        document.getElementById('modalOrderId').textContent = orderId;
-        const tbody = document.getElementById('modalDetailBody');
-        tbody.innerHTML = ''; // 清空旧数据
+        // 清空之前的内容
+        contentDiv.innerHTML = '';
 
-        const details = allOrderData[orderId] || [];
-        if (details.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="5" class="text-center">暂无商品详情</td></tr>';
-            return;
-        }
+        // 2. 遍历后端传过来的 orderDetails 数组
+        // 根据你提供的数据，orderDetails 是一个包含 OrderDetail 对象的数组
+        orderDetails.forEach(function(detail) {
+            // 提取书籍信息 (Book 对象)
+            var book = detail.book;
+            var bookName = book ? book.name : '未知书籍';
+            var author = book ? book.author : '未知作者';
+            var price = detail.amount; // 单价
+            var quantity = detail.number; // 数量
+            var image = book && book.image ? book.image : '/images/default-book.png'; // 使用默认图片防止空指针
 
-        details.forEach(detail => {
-            const row = document.createElement('tr');
-            row.innerHTML = `
-                <td><img src="${detail.image}" alt="书籍图片" style="width: 50px; height: 50px; object-fit: cover;"></td>
-                <td>${detail.bookName}</td>
-                <td>× ${detail.number}</td>
-                <td><fmt:formatNumber value="${detail.amount}" type="currency" currencySymbol="¥"/></td>
-                <td><fmt:formatNumber value="${detail.amount * detail.number}" type="currency" currencySymbol="¥"/></td>
-            `;
-            tbody.appendChild(row);
+            // 3. 创建并拼接 HTML 字符串
+            // 这里采用了简单的 div 布局，你可以根据需要美化
+            var itemHtml = `
+            <div style="display: flex; margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px dashed #eee;">
+                <!-- 书籍图片 -->
+                <div style="width: 80px; height: 100px; margin-right: 15px;">
+                    <img src="${image}" alt="${bookName}" style="width: 100%; height: 100%; object-fit: cover;">
+                </div>
+                <!-- 书籍信息 -->
+                <div style="flex: 1;">
+                    <h4 style="margin: 0 0 8px 0; color: #333;">${bookName}</h4>
+                    <p style="margin: 5px 0; color: #666; font-size: 14px;"><strong>作者：</strong>${author}</p>
+                    <p style="margin: 5px 0; color: #666; font-size: 14px;"><strong>单价：</strong>¥${price}</p>
+                    <p style="margin: 5px 0; color: #666; font-size: 14px;"><strong>数量：</strong>${quantity} 本</p>
+                </div>
+            </div>
+        `;
+
+            // 将生成的 HTML 添加到内容区域
+            contentDiv.innerHTML += itemHtml;
         });
+
+        // 显示模态框和遮罩层
+        modal.style.display = 'block';
+        backdrop.style.display = 'block';
     }
 
-    // 搜索功能 (简单示例)
-    function searchOrders() {
-        const input = document.getElementById('orderSearch').value.toLowerCase();
-        const table = document.querySelector('table');
-        const tr = table.querySelectorAll('tbody tr');
-
-        tr.forEach(row => {
-            const txtValue = row.textContent || row.innerText;
-            row.style.display = txtValue.toLowerCase().includes(input) ? "" : "none";
-        });
+    // 4. 关闭模态框的函数
+    function closeModal() {
+        document.getElementById('orderDetailModal').style.display = 'none';
+        document.getElementById('modalBackdrop').style.display = 'none';
     }
 
-    function resetSearch() {
-        document.getElementById('orderSearch').value = '';
-        searchOrders();
-    }
-
-    // 导出功能 (与之前的 Excel 导出逻辑一致)
-    function exportOrders() {
-        fetch("${path}/admin/order/export", {
-            method: 'GET'
-        })
-            .then(response => {
-                if (!response.ok) throw new Error("导出失败");
-                return response.blob();
-            })
-            .then(blob => {
-                const url = window.URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = "订单数据报表.xlsx";
-                document.body.appendChild(a);
-                a.click();
-                a.remove();
-                window.URL.revokeObjectURL(url);
-            })
-            .catch(error => {
-                console.error("Error:", error);
-                alert("导出出错，请重试");
-            });
-    }
-
-    // 删除订单 (示例)
-    function deleteOrder(id) {
-        if (confirm("确定要删除该订单吗？")) {
-            // 这里需要调用删除接口
-            alert("删除功能待实现 (ID: " + id + ")");
-        }
-    }
 </script>

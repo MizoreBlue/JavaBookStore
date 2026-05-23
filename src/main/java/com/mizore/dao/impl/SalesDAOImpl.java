@@ -23,7 +23,7 @@ public class SalesDAOImpl implements SalesDAO {
         List<SalesRankDTO> list = new ArrayList<>();
 
 //        准备多表查询语句
-        String sql = "SELECT   b.name AS bookName, b.author AS author, SUM(od.quantity) AS totalSales\n" +
+        String sql = "SELECT   b.name AS bookName, b.author AS author, SUM(od.number) AS totalSales\n" +
                 "FROM   orders o JOIN order_detail od ON o.id = od.order_id JOIN  book b ON od.book_id = b.id WHERE \n" +
                 "    o.status = 3   GROUP BY     b.name, b.author ORDER BY  totalSales DESC";
 

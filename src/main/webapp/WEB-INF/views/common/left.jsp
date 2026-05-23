@@ -33,10 +33,10 @@
     }
 
     /* 悬停效果 */
+    .menu-link:active,
     .menu-link:hover {
         background-color: #34495e;
         color: #fff; /* 白色文字 */
-        padding-left: 25px; /* 向右滑动动画 */
     }
 
     /* 当前选中状态 (可选，需配合 JS 实现) */
@@ -81,3 +81,23 @@
         </li>
     </ul>
 </div>
+
+<script>
+<%--    等待页面加载完成--%>
+    document.addEventListener('DOMContentLoaded', () => {
+    //     获取所有菜单链接
+        const menuLinks = document.querySelectorAll('.menu-link')
+
+        menuLinks.forEach(link => {
+            link.addEventListener('click', function () {
+            //     移除所有的 active 类
+                menuLinks.forEach(item => item.classList.remove('active'))
+
+            //     给当前的点击的链接添加 active 类
+
+                this.classList.add('active')
+
+            })
+        })
+    })
+</script>
