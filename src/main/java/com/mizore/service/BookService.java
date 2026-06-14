@@ -1,30 +1,57 @@
 package com.mizore.service;
 
+import com.mizore.dao.BookDAO;
 import com.mizore.entity.Book;
+import com.mizore.utils.PageResult;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
-public interface BookService {
+public class BookService {
 
-    /**
-     * 查找全部书籍数据
-     * @return
-     */
-    List<Book> findAllBooks();
+    private BookDAO bookDAO = ServiceFactory.getBookDAO();
 
+    public PageResult<Book> page(int page, int pageSize, String category, String keyword) {
+        if (page < 1) page = 1;
+        List<Book> records;
+        long total;
+        if (keyword != null && !keyword.trim().isEmpty()) {
+            records = bookDAO.pageByName(keyword.trim(), page, pageSize);
+            total = bookDAO.countByName(keyword.trim());
+        } else if (category != null && !category.trim().isEmpty()) {
+            records = bookDAO.pageByCategory(category.trim(), page, pageSize);
+            total = bookDAO.countByCategory(category.trim());
+        } else {
+            records = bookDAO.page(page, pageSize);
+            total = bookDAO.count();
+        }
+        return PageResult.of(records, total, page, pageSize);
+    }
 
-    /**
-     * 插入一条数据
-     * @param book
-     * @return
-     */
-    boolean insert(Book book);
+    public Book getById(Long id) {
+        return bookDAO.findById(id);
+    }
 
+    public List<Book> getRecommend() {
+        return bookDAO.findTopRecommend();
+    }
 
-    /**
-     * 模糊查询
-     * @param keyword
-     * @return
-     */
-    List<Book> findBookByKeyword(String keyword);
+    public List<Book> findAll() {
+        return bookDAO.findAll();
+    }
+
+    public Long add(Book book) {
+        book.setCreateTime(LocalDateTime.now());
+        book.setUpdateTime(LocalDateTime.now());
+        return bookDAO.insert(book);
+    }
+
+    public boolean update(Book book) {
+        book.setUpdateTime(LocalDateTime.now());
+        return bookDAO.update(book);
+    }
+
+    public boolean delete(Long id) {
+        return bookDAO.delete(id);
+    }
 }

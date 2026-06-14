@@ -1,21 +1,22 @@
 package com.mizore.entity.vo;
 
-import com.mizore.entity.Book;
 import com.mizore.entity.OrderDetail;
 import com.mizore.entity.Orders;
+import com.mizore.entity.User;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
+import java.io.Serializable;
 import java.util.List;
 
 @Data
-public class OrderVo {
-
-    //    一条订单的详细信息 下单时间都在这里
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class OrderVo implements Serializable {
     private Orders orders;
-
-
-    //    订单对应的多本书籍
     private List<OrderDetail> orderDetailList;
-
+    private User user;
 }

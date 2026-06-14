@@ -1,22 +1,31 @@
 package com.mizore.utils;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.util.List;
 
-/**
- * 封装分页查询结果
- */
 @Data
-@AllArgsConstructor
+@Builder
 @NoArgsConstructor
-public class PageResult implements Serializable {
+@AllArgsConstructor
+public class PageResult<T> implements Serializable {
+    private List<T> records;
+    private long total;
+    private int pageNum;
+    private int pageSize;
+    private int pages;
 
-    private long total; //总记录数
-
-    private List records; //当前页数据集合
-
+    public static <T> PageResult<T> of(List<T> records, long total, int pageNum, int pageSize) {
+        PageResult<T> result = new PageResult<>();
+        result.setRecords(records);
+        result.setTotal(total);
+        result.setPageNum(pageNum);
+        result.setPageSize(pageSize);
+        result.setPages((int) Math.ceil((double) total / pageSize));
+        return result;
+    }
 }

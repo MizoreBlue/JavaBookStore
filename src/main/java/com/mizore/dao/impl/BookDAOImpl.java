@@ -1,159 +1,195 @@
 package com.mizore.dao.impl;
 
+import com.mizore.utils.DbUtilsConfig;
+
 import com.mizore.dao.BookDAO;
 import com.mizore.entity.Book;
 import com.mizore.utils.DruidUtils;
+import org.apache.commons.dbutils.QueryRunner;
+import org.apache.commons.dbutils.handlers.BeanHandler;
+import org.apache.commons.dbutils.handlers.BeanListHandler;
+import org.apache.commons.dbutils.handlers.ScalarHandler;
 
-import java.sql.*;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
+import java.sql.SQLException;
+import java.util.Collections;
 import java.util.List;
 
 public class BookDAOImpl implements BookDAO {
 
-    // 查询所有书籍
-    public List<Book> findAll() {
-        List<Book> bookList = new ArrayList<>();
-        String sql = "SELECT * FROM book";
+    private QueryRunner queryRunner = new QueryRunner(DruidUtils.getDataSource());
 
-//        从链接池获取链接
-        try (Connection conn = DruidUtils.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
-
-            while (rs.next()) {
-                Book book = new Book();
-
-//               设置返回的数据
-                book.setId(rs.getLong("id"));
-                book.setName(rs.getString("name")); // 对应数据库字段
-                book.setAuthor(rs.getString("author"));
-                book.setPrice(new java.math.BigDecimal(rs.getString("price")));
-                book.setDescription(rs.getString("description"));
-                book.setCategory(rs.getString("category"));
-                book.setStock(rs.getInt("stock"));
-                book.setImage(rs.getString("image"));
-
-
-                bookList.add(book);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return bookList;
-    }
-
-
-    /**
-     * 插入一条数据
-     *
-     * @param book
-     * @return
-     */
-    public boolean insert(Book book) {
-
-//        准备sql语句
-        String sql = "INSERT INTO book (name, author, price, description, category, image, stock,create_time) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-
-
-//        获得 JDBC链接
-        try (Connection connection = DruidUtils.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-            preparedStatement.setString(1, book.getName());
-            preparedStatement.setString(2, book.getAuthor());
-            preparedStatement.setBigDecimal(3, book.getPrice());
-            preparedStatement.setString(4, book.getDescription());
-            preparedStatement.setString(5, book.getCategory());
-            preparedStatement.setString(6, book.getImage());
-            preparedStatement.setInt(7, book.getStock());
-            preparedStatement.setTimestamp(8, Timestamp.valueOf(LocalDateTime.now()));
-
-//            执行sql
-            int rows = preparedStatement.executeUpdate();
-
-            if (rows > 0) {
-                return true;
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-            // 在实际开发中，这里可能需要根据异常类型（如主键冲突、字段过长）给用户不同的提示
-        }
-
-        return false;
-    }
-
-
-    /**
-     * 模糊查询
-     *
-     * @param keyword
-     * @return
-     */
-    public List<Book> findByKeyword(String keyword) {
-
-//        准备查询语句
-        String sql = "SELECT * FROM book WHERE name LIKE ?";
-
-        List<Book> bookList = new ArrayList<>();
-
-        try (Connection connection = DruidUtils.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(sql)
-        ) {
-//            防止sql 注入
-            preparedStatement.setString(1, "%" + keyword + "%");
-            ResultSet rs = preparedStatement.executeQuery();
-
-//            封装数据
-            while (rs.next()) {
-                Book book = new Book();
-                setBookAttrs(book, rs);
-
-                bookList.add(book);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return bookList;
-    }
-
-
-    /**
-     * 根据id获取数据
-     *
-     * @param bookId
-     * @return
-     */
-    public Book findById(Long bookId) {
+    @Override
+    public Book findById(Long id) {
         String sql = "SELECT * FROM book WHERE id = ?";
-        Book book = new Book();
-        try (
-                Connection connection = DruidUtils.getConnection();
-                PreparedStatement preparedStatement = connection.prepareStatement(sql)
-        ) {
-//            设置参数
-            preparedStatement.setLong(1, bookId);
-            ResultSet rs = preparedStatement.executeQuery();
-            while (rs.next()) {
-                setBookAttrs(book, rs);
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
+        try {
+            return queryRunner.query(sql, DbUtilsConfig.newBeanHandler(Book.class), id);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
-        return book;
     }
 
+    @Override
+    public List<Book> findAll() {
+        String sql = "SELECT * FROM book ORDER BY id DESC";
+        try {
+            List<Book> list = queryRunner.query(sql, DbUtilsConfig.newBeanListHandler(Book.class));
+            return list != null ? list : Collections.emptyList();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
-//    设置属性
-    private void setBookAttrs(Book book, ResultSet rs) throws SQLException {
-        book.setId(rs.getLong("id"));
-        book.setName(rs.getString("name"));
-        book.setAuthor(rs.getString("author"));
-        book.setPrice(rs.getBigDecimal("price"));
-        book.setDescription(rs.getString("description"));
-        book.setCategory(rs.getString("category"));
-        book.setImage(rs.getString("image"));
-        book.setStock(rs.getInt("stock"));
+    @Override
+    public List<Book> findByCategory(String category) {
+        String sql = "SELECT * FROM book WHERE category = ? ORDER BY id DESC";
+        try {
+            List<Book> list = queryRunner.query(sql, DbUtilsConfig.newBeanListHandler(Book.class), category);
+            return list != null ? list : Collections.emptyList();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public List<Book> findByName(String name) {
+        String sql = "SELECT * FROM book WHERE name LIKE ? ORDER BY id DESC";
+        try {
+            List<Book> list = queryRunner.query(sql, DbUtilsConfig.newBeanListHandler(Book.class), "%" + name + "%");
+            return list != null ? list : Collections.emptyList();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public List<Book> page(int page, int pageSize) {
+        int offset = (page - 1) * pageSize;
+        String sql = "SELECT * FROM book ORDER BY id DESC LIMIT ? OFFSET ?";
+        try {
+            List<Book> list = queryRunner.query(sql, DbUtilsConfig.newBeanListHandler(Book.class), pageSize, offset);
+            return list != null ? list : Collections.emptyList();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public List<Book> pageByCategory(String category, int page, int pageSize) {
+        int offset = (page - 1) * pageSize;
+        String sql = "SELECT * FROM book WHERE category = ? ORDER BY id DESC LIMIT ? OFFSET ?";
+        try {
+            List<Book> list = queryRunner.query(sql, DbUtilsConfig.newBeanListHandler(Book.class), category, pageSize, offset);
+            return list != null ? list : Collections.emptyList();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public List<Book> pageByName(String name, int page, int pageSize) {
+        int offset = (page - 1) * pageSize;
+        String sql = "SELECT * FROM book WHERE name LIKE ? ORDER BY id DESC LIMIT ? OFFSET ?";
+        try {
+            List<Book> list = queryRunner.query(sql, DbUtilsConfig.newBeanListHandler(Book.class), "%" + name + "%", pageSize, offset);
+            return list != null ? list : Collections.emptyList();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public List<Book> findTopRecommend() {
+        String sql = "SELECT * FROM book ORDER BY id DESC LIMIT 8";
+        try {
+            List<Book> list = queryRunner.query(sql, DbUtilsConfig.newBeanListHandler(Book.class));
+            return list != null ? list : Collections.emptyList();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public long count() {
+        String sql = "SELECT COUNT(*) FROM book";
+        try {
+            Number num = queryRunner.query(sql, new ScalarHandler<>());
+            return num != null ? num.longValue() : 0;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public long countByCategory(String category) {
+        String sql = "SELECT COUNT(*) FROM book WHERE category = ?";
+        try {
+            Number num = queryRunner.query(sql, new ScalarHandler<>(), category);
+            return num != null ? num.longValue() : 0;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public long countByName(String name) {
+        String sql = "SELECT COUNT(*) FROM book WHERE name LIKE ?";
+        try {
+            Number num = queryRunner.query(sql, new ScalarHandler<>(), "%" + name + "%");
+            return num != null ? num.longValue() : 0;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public Long insert(Book book) {
+        String sql = "INSERT INTO book (name, author, description, category, image, price, stock, create_time, update_time) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        try {
+            queryRunner.update(sql,
+                    book.getName(), book.getAuthor(), book.getDescription(),
+                    book.getCategory(), book.getImage(), book.getPrice(),
+                    book.getStock(), book.getCreateTime(), book.getUpdateTime());
+            return 1L;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public boolean update(Book book) {
+        String sql = "UPDATE book SET name = ?, author = ?, description = ?, category = ?, image = ?, price = ?, stock = ?, update_time = ? WHERE id = ?";
+        try {
+            int rows = queryRunner.update(sql,
+                    book.getName(), book.getAuthor(), book.getDescription(),
+                    book.getCategory(), book.getImage(), book.getPrice(),
+                    book.getStock(), book.getUpdateTime(), book.getId());
+            return rows > 0;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public boolean delete(Long id) {
+        String sql = "DELETE FROM book WHERE id = ?";
+        try {
+            int rows = queryRunner.update(sql, id);
+            return rows > 0;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public boolean updateStock(Long bookId, int number) {
+        String sql = "UPDATE book SET stock = stock - ? WHERE id = ?";
+        try {
+            int rows = queryRunner.update(sql, number, bookId);
+            return rows > 0;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
+
+

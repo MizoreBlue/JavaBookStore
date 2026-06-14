@@ -1,58 +1,47 @@
 package com.mizore.utils;
 
-import com.alibaba.druid.pool.DruidDataSourceFactory;
-import javax.sql.DataSource;
-import java.io.InputStream;
+import com.alibaba.druid.pool.DruidDataSource;
+
 import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.Properties;
 
-/**
- * 基于 Druid 连接池的数据库工具类
- */
 public class DruidUtils {
-    private static DataSource dataSource;
 
-    // 1. 静态代码块：初始化连接池
+    private static final String DB_URL = "jdbc:mysql://localhost:3306/java_bookstore?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true&characterEncoding=utf8";
+    private static final String USERNAME = "root";
+    private static final String PASSWORD = "025911";
+
+    private static DruidDataSource dataSource;
+
     static {
-        try {
-            // 1. 加载配置文件
-            InputStream is = DruidUtils.class.getClassLoader().getResourceAsStream("db.properties");
-            Properties pros = new Properties();
-            pros.load(is);
-
-            // 2. 使用 Druid 的工厂类创建数据源（连接池）
-            dataSource = DruidDataSourceFactory.createDataSource(pros);
-
-            System.out.println("Druid 连接池初始化成功！");
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException("Druid 连接池初始化失败", e);
-        }
+        dataSource = new DruidDataSource();
+        dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
+        dataSource.setUrl(DB_URL);
+        dataSource.setUsername(USERNAME);
+        dataSource.setPassword(PASSWORD);
+        dataSource.setInitialSize(5);
+        dataSource.setMinIdle(5);
+        dataSource.setMaxActive(20);
+        dataSource.setMaxWait(60000);
+        dataSource.setTimeBetweenEvictionRunsMillis(60000);
+        dataSource.setMinEvictableIdleTimeMillis(300000);
+        dataSource.setValidationQuery("SELECT 1");
+        dataSource.setTestWhileIdle(true);
+        dataSource.setTestOnBorrow(false);
+        dataSource.setTestOnReturn(false);
     }
 
-    // 2. 获取连接
     public static Connection getConnection() throws SQLException {
-        // 从连接池中获取一个连接
         return dataSource.getConnection();
     }
 
-    // 3. 释放资源
-    // 注意：这里的 close() 实际上是将连接归还给连接池，而不是物理关闭
-    public static void close(Connection conn, Statement ps, ResultSet rs) {
-        try {
-            if (rs != null) rs.close();
-        } catch (SQLException e) { e.printStackTrace(); }
-
-        try {
-            if (ps != null) ps.close();
-        } catch (SQLException e) { e.printStackTrace(); }
-
-        try {
-            if (conn != null) conn.close();
-        } catch (SQLException e) { e.printStackTrace(); }
+    public static DruidDataSource getDataSource() {
+        return dataSource;
     }
 
+    public static void closeDataSource() {
+        if (dataSource != null && !dataSource.isClosed()) {
+            dataSource.close();
+        }
+    }
 }

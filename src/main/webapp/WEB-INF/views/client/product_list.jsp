@@ -1,215 +1,105 @@
-<link type="text/css" rel="stylesheet" href="<%=request.getContextPath()%>/assets/css/common.css">
-<%@ taglib uri="jakarta.tags.core" prefix="c" %>
-<%@ taglib uri="jakarta.tags.functions" prefix="fn" %>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
-
-<%--网上书城顶部--%>
-<%@include file="../common/head.jsp"%>
-
-<%--网上书城侧边菜单列表--%>
-<%@include file="../common/menu_search.jsp"%>
-
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%
+    String ctx = request.getContextPath();
+    if (ctx.equals("/") || ctx.equals("")) {
+        ctx = "";
+    }
+%>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>商品列表</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #f5f5f5; }
+        .header { background-color: #4CAF50; padding: 15px; color: white; }
+        .header-content { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 24px; font-weight: bold; }
+        .nav a { color: white; margin-left: 20px; text-decoration: none; }
+        .search-bar { display: flex; gap: 10px; }
+        .search-bar input { padding: 8px; border: none; border-radius: 4px; }
+        .search-bar button { padding: 8px 16px; background-color: #fff; color: #4CAF50; border: none; border-radius: 4px; cursor: pointer; }
+        .container { max-width: 1200px; margin: 20px auto; }
+        .products { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+        .product-card { background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .product-card img { width: 100%; height: 200px; object-fit: cover; border-radius: 4px; }
+        .product-name { font-weight: bold; margin: 10px 0; }
+        .product-author { color: #666; font-size: 14px; }
+        .product-price { color: #f44336; font-size: 18px; font-weight: bold; }
+        .btn-add { background-color: #4CAF50; color: white; padding: 8px 16px; border: none; border-radius: 4px; cursor: pointer; width: 100%; }
+        .btn-add:hover { opacity: 0.8; }
+        .category-filter { margin-bottom: 15px; }
+        .category-filter a { margin-right: 10px; padding: 5px 10px; background: white; border-radius: 4px; text-decoration: none; color: #333; }
+        .category-filter a.active { background-color: #4CAF50; color: white; }
+    </style>
+</head>
 <body>
-
-<%--商品列表主体内容--%>
-<div class="main-container">
-    <!-- 面包屑导航 -->
-    <div class="breadcrumb">
-        <a href="${pageContext.request.contextPath}/index">首页</a> &gt; 全部商品
-    </div>
-
-    <!-- 页面标题 -->
-    <div class="page-header">
-        <h2>全部商品目录</h2>
-        <span class="total-count">共 ${fn:length(productList)} 件商品</span>
-    </div>
-
-    <!-- 商品列表网格 -->
-    <div class="product-grid">
-        <!-- 使用 JSTL 遍历后端传来的 productList -->
-        <c:forEach items="${productList}" var="book">
-            <div class="product-card">
-                <div class="img-box">
-                    <img src="${pageContext.request.contextPath}/assets/images/productImg/${book.image}" alt="${book.name}">
-                </div>
-                <div class="info-box">
-                    <h3 class="book-name" title="${book.name}">${book.name}</h3>
-
-                    <!-- 价格区域 -->
-                    <div class="price-box">
-                        <span class="price-symbol">¥</span>
-                        <span class="price-num">${book.price}</span>
-                    </div>
-
-                    <!-- 修改点 1: 显示库存 -->
-                    <!-- 注意：这里加了一个简单的判断，如果库存为0显示红色，否则显示绿色 -->
-                    <div class="stock-info">
-                        库存:
-                        <span style="color: ${book.stock > 0 ? '#4CAF50' : '#f44336'}; font-weight: bold;">
-                                ${book.stock}
-                        </span>
-                    </div>
-
-                    <!-- 修改点 2: 添加“加入购物车”表单 -->
-                    <!-- 注意：这里新增了一个表单，method是post，action指向你的 Servlet -->
-                    <form action="${pageContext.request.contextPath}/cart" method="post" style="margin-top: 10px;">
-                        <!-- 隐藏域：传递操作类型 (add) -->
-                        <input type="hidden" name="action" value="add">
-                        <!-- 隐藏域：传递商品信息 -->
-                        <input type="hidden" name="bookId" value="${book.id}">
-                        <input type="hidden" name="PName" value="${book.name}">
-                        <input type="hidden" name="Price" value="${book.price}">
-                        <input type="hidden" name="Image" value="${book.image}">
-
-                        <!-- 数量选择 (默认为1，且不能超过库存) -->
-                        <input type="number" name="quantity" value="1" min="1" max="${book.stock}" style="width: 30px; margin-right: 5px;" ${book.stock == 0 ? 'disabled' : ''}>
-
-                        <button type="submit" class="btn-cart" ${book.stock == 0 ? 'disabled' : ''}>
-                            加入购物车
-                        </button>
-                    </form>
-
-                    <!-- 原有的“购买”按钮表单 (保持不变) -->
-                    <form action="${pageContext.request.contextPath}/cart" method="post" style="margin-top: 5px;">
-                        <input type="hidden" name="bookId" value="${book.id}">
-                        <input type="hidden" name="PName" value="${book.name}">
-                        <input type="hidden" name="Price" value="${book.price}">
-                        <input type="hidden" name="Image" value="${book.image}">
-                        <button type="submit" class="btn-buy">立即购买</button>
-                    </form>
-                </div>
+    <div class="header">
+        <div class="header-content">
+            <div class="logo"><a href="<%=ctx%>/" style="color: white; text-decoration: none;">图书商城</a></div>
+            <div class="nav">
+                <a href="<%=ctx%>/product/list">商品列表</a>
+                <a href="<%=ctx%>/cart/list">购物车</a>
+                <a href="<%=ctx%>/order/list">我的订单</a>
+                <c:if test="${sessionScope.user != null}">
+                    <a href="<%=ctx%>/user/profile">欢迎: ${sessionScope.user.username}</a>
+                    <a href="<%=ctx%>/user/logout">退出</a>
+                </c:if>
+                <c:if test="${sessionScope.user == null}">
+                    <a href="<%=ctx%>/user/login">登录</a>
+                </c:if>
             </div>
-        </c:forEach>
+            <form class="search-bar" onsubmit="return search()">
+                <input type="text" id="keyword" placeholder="搜索书名或作者">
+                <button type="submit">搜索</button>
+            </form>
+        </div>
     </div>
-</div>
-
-<!-- 页面内嵌样式，建议后期移至 common.css -->
-<style>
-    /* 主体容器 */
-    .main-container {
-        width: 1000px;
-        margin: 20px auto;
-        background-color: #fff;
-        padding: 20px;
-        border: 1px solid #e0e0e0;
-        min-height: 500px;
-    }
-
-    /* 面包屑导航 */
-    .breadcrumb {
-        font-size: 12px;
-        color: #666;
-        margin-bottom: 15px;
-        border-bottom: 1px solid #eee;
-        padding-bottom: 10px;
-    }
-    .breadcrumb a { color: #666; text-decoration: none; }
-    .breadcrumb a:hover { color: #ff6700; }
-
-    /* 页面标题区域 */
-    .page-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 25px;
-        border-bottom: 2px solid #ff6700;
-        padding-bottom: 10px;
-    }
-    .page-header h2 { margin: 0; font-size: 20px; color: #333; font-weight: normal; }
-    .total-count { font-size: 14px; color: #999; }
-
-    /* 商品网格布局 */
-    .product-grid {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: space-between; /* 两端对齐 */
-        gap: 20px; /* 卡片间距 */
-    }
-
-    /* 单个商品卡片 */
-    .product-card {
-        width: 220px; /* 固定宽度，一行大约放4个 */
-        border: 1px solid #f0f0f0;
-        padding: 15px;
-        transition: all 0.3s;
-        text-align: center;
-        background: #fff;
-    }
-
-    /* 鼠标悬停效果 */
-    .product-card:hover {
-        border-color: #ff6700;
-        box-shadow: 0 0 10px rgba(255, 105, 0, 0.2);
-        transform: translateY(-2px);
-    }
-
-    /* 图片区域 */
-    .img-box {
-        height: 250px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin-bottom: 15px;
-    }
-    .img-box img {
-        max-width: 100%;
-        max-height: 100%;
-        object-fit: contain;
-    }
-
-    /* 书名 */
-    .book-name {
-        font-size: 14px;
-        color: #333;
-        font-weight: normal;
-        height: 40px; /* 限制高度，防止书名过长撑开布局 */
-        overflow: hidden;
-        margin: 0 0 10px 0;
-        line-height: 1.5;
-    }
-
-    /* 价格区域 */
-    .price-box {
-        color: #ff6700;
-        font-size: 18px;
-        margin-bottom: 15px;
-        font-family: Arial, sans-serif;
-    }
-    .price-symbol { font-size: 12px; }
-
-    /* 按钮区域 */
-    .action-box {
-        display: flex;
-        justify-content: center;
-        gap: 10px;
-    }
-    .btn-buy, .btn-cart {
-        display: inline-block;
-        padding: 5px 15px;
-        font-size: 12px;
-        text-decoration: none;
-        border-radius: 2px;
-        transition: background 0.2s;
-    }
-    .btn-buy {
-        background-color: #ff6700;
-        color: #fff;
-        border: 1px solid #ff6700;
-    }
-    .btn-buy:hover { background-color: #f25800; }
-
-    .btn-cart {
-        background-color: #fff;
-        color: #ff6700;
-        border: 1px solid #ff6700;
-    }
-    .btn-cart:hover {
-        background-color: #ff6700;
-        color: #fff;
-    }
-</style>
-
-<%--网上书城页脚--%>
-<%@include file="../common/foot.jsp"%>
-
+    <div class="container">
+        <div class="category-filter">
+            <a href="<%=ctx%>/product/list" ${category == null ? 'class="active"' : ''}>全部</a>
+            <a href="<%=ctx%>/product/list?category=文学小说" ${category == '文学小说' ? 'class="active"' : ''}>文学小说</a>
+            <a href="<%=ctx%>/product/list?category=科技科普" ${category == '科技科普' ? 'class="active"' : ''}>科技科普</a>
+            <a href="<%=ctx%>/product/list?category=历史传记" ${category == '历史传记' ? 'class="active"' : ''}>历史传记</a>
+            <a href="<%=ctx%>/product/list?category=经济管理" ${category == '经济管理' ? 'class="active"' : ''}>经济管理</a>
+            <a href="<%=ctx%>/product/list?category=儿童读物" ${category == '儿童读物' ? 'class="active"' : ''}>儿童读物</a>
+        </div>
+        <div class="products">
+            <c:forEach var="book" items="${books}">
+                <div class="product-card">
+                    <img src="<c:choose><c:when test="${not empty book.image}">${book.image}</c:when><c:otherwise><%=ctx%>/static/images/no-image.png</c:otherwise></c:choose>" alt="${book.name}" onerror="this.onerror=null;this.src='<%=ctx%>/static/images/no-image.png';">
+                    <div class="product-name">${book.name}</div>
+                    <div class="product-author">作者：${book.author}</div>
+                    <div class="product-price">¥${book.price}</div>
+                    <button class="btn-add" onclick="addToCart(${book.id})">加入购物车</button>
+                </div>
+            </c:forEach>
+            <c:if test="${empty books}">
+                <div style="grid-column: 1/-1; text-align: center; padding: 40px; color: #999;">
+                    <p style="font-size: 18px;">暂无商品</p>
+                </div>
+            </c:if>
+        </div>
+    </div>
+    <script>
+        var contextPath = '<%=ctx%>';
+        function search() {
+            var keyword = document.getElementById('keyword').value;
+            if (keyword) {
+                location.href = contextPath + '/product/list?keyword=' + encodeURIComponent(keyword);
+            }
+            return false;
+        }
+        function addToCart(bookId) {
+            fetch(contextPath + '/cart/add', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                body: 'bookId=' + bookId + '&quantity=1'
+            }).then(function(res) { return res.json(); }).then(function(data) {
+                alert(data.message);
+            });
+        }
+    </script>
 </body>
+</html>

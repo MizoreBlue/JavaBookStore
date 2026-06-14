@@ -5,36 +5,19 @@ import com.mizore.entity.Book;
 import java.util.List;
 
 public interface BookDAO {
-
-
-    /**
-     * 查到所有书籍信息
-     * @return
-     */
+    Book findById(Long id);
     List<Book> findAll();
-
-
-    /**
-     * 插入一条数据
-     * @param book
-     * @return
-     */
-    boolean insert(Book book);
-
-
-    /**
-     * 模糊查询
-     * @param keyword
-     * @return
-     */
-    List<Book> findByKeyword(String keyword);
-
-
-    /**
-     *
-     * 根据id获取数据
-     * @param bookId
-     * @return
-     */
-    Book findById(Long bookId);
+    List<Book> findByCategory(String category);
+    List<Book> findByName(String name);
+    List<Book> page(int page, int pageSize);
+    List<Book> pageByCategory(String category, int page, int pageSize);
+    List<Book> pageByName(String name, int page, int pageSize);
+    List<Book> findTopRecommend();
+    long count();
+    long countByCategory(String category);
+    long countByName(String name);
+    Long insert(Book book);
+    boolean update(Book book);
+    boolean delete(Long id);
+    boolean updateStock(Long bookId, int number);
 }

@@ -13,27 +13,12 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class User implements Serializable {
-
-    private static final long serialVersionUID = 1L;
-
     private Long id;
-
-    //姓名
     private String username;
-
     private String password;
-
-    //手机号
     private String phone;
-
     private String email;
-
-    //性别 0 女 1 男
     private String sex;
-
-    //头像
     private String avatar;
-
-    //注册时间
     private LocalDateTime createTime;
 }
