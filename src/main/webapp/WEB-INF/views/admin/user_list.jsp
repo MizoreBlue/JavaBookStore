@@ -1,0 +1,92 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib uri="jakarta.tags.core" prefix="c" %>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>用户管理</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: "Microsoft YaHei", Arial, sans-serif; background: #ecf0f1; }
+        .layout { display: flex; min-height: 100vh; }
+        .sidebar { width: 220px; background: #2c3e50; color: white; padding: 20px 0; }
+        .sidebar h2 { padding: 0 20px 20px; font-size: 18px; border-bottom: 1px solid #34495e; }
+        .sidebar a { display: block; padding: 12px 25px; color: #bdc3c7; text-decoration: none; font-size: 14px; }
+        .sidebar a:hover, .sidebar a.active { background: #34495e; color: white; border-left: 4px solid #3498db; }
+        .main { flex: 1; padding: 20px; }
+        .topbar { background: white; padding: 12px 20px; border-radius: 6px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+        .topbar h1 { font-size: 18px; color: #2c3e50; }
+        .topbar a { color: #e74c3c; text-decoration: none; margin-left: 15px; }
+        .card { background: white; border-radius: 8px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+        table { width: 100%; border-collapse: collapse; }
+        th { background: #34495e; color: white; padding: 10px; text-align: left; font-size: 13px; }
+        td { padding: 10px; border-bottom: 1px solid #eee; font-size: 13px; }
+        tr:hover { background: #f9f9f9; }
+        .btn { padding: 6px 12px; border: none; border-radius: 4px; cursor: pointer; text-decoration: none; font-size: 12px; display: inline-block; color: white; }
+        .btn-danger { background: #e74c3c; }
+        .btn-success { background: #27ae60; }
+        .btn-warning { background: #f39c12; }
+        .pagination { text-align: center; margin-top: 20px; }
+        .pagination a, .pagination span { display: inline-block; padding: 6px 12px; margin: 0 2px; background: white; border: 1px solid #ddd; border-radius: 4px; text-decoration: none; color: #333; font-size: 13px; }
+        .pagination .current { background: #3498db; color: white; border-color: #3498db; }
+    </style>
+</head>
+<body>
+    <div class="layout">
+        <div class="sidebar">
+            <h2>Java Book Store</h2>
+            <a href="${pageContext.request.contextPath}/backend/home">控制台</a>
+            <a href="${pageContext.request.contextPath}/backend/book">图书管理</a>
+            <a href="${pageContext.request.contextPath}/backend/category">分类管理</a>
+            <a href="${pageContext.request.contextPath}/backend/order">订单管理</a>
+            <a href="${pageContext.request.contextPath}/backend/user" class="active">用户管理</a>
+        </div>
+        <div class="main">
+            <div class="topbar">
+                <h1>用户管理</h1>
+                <div>欢迎, ${employee.username} <a href="${pageContext.request.contextPath}/backend/book?action=logout">退出</a></div>
+            </div>
+            <div class="card">
+                <table>
+                    <tr><th>ID</th><th>用户名</th><th>邮箱</th><th>电话</th><th>性别</th><th>状态</th><th>注册时间</th><th>操作</th></tr>
+                    <c:if test="${empty pageResult.records}">
+                        <tr><td colspan="8" style="text-align:center;color:#999;">暂无数据</td></tr>
+                    </c:if>
+                    <c:forEach items="${pageResult.records}" var="u">
+                        <tr>
+                            <td>${u.id}</td>
+                            <td>${u.username}</td>
+                            <td>${u.email}</td>
+                            <td>${u.phone}</td>
+                            <td>${u.sex}</td>
+                            <td><span style="color:${u.status == 1 ? '#27ae60' : '#e74c3c'};">${u.status == 1 ? '正常' : '禁用'}</span></td>
+                            <td>${u.createTime}</td>
+                            <td>
+                                <a href="${pageContext.request.contextPath}/backend/user?action=edit&id=${u.id}" class="btn btn-success">编辑</a>
+                                <c:choose>
+                                    <c:when test="${u.status == 1}">
+                                        <a href="${pageContext.request.contextPath}/backend/user?action=toggleStatus&id=${u.id}" class="btn btn-warning" onclick="return confirm('确认禁用该用户?')">禁用</a>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <a href="${pageContext.request.contextPath}/backend/user?action=toggleStatus&id=${u.id}" class="btn btn-success" onclick="return confirm('确认启用该用户?')">启用</a>
+                                    </c:otherwise>
+                                </c:choose>
+                                <a href="${pageContext.request.contextPath}/backend/user?action=delete&id=${u.id}" class="btn btn-danger" onclick="return confirm('确认删除?')">删除</a>
+                            </td>
+                        </tr>
+                    </c:forEach>
+                </table>
+                <div class="pagination">
+                    <c:if test="${pageResult.pageNum > 1}">
+                        <a href="${pageContext.request.contextPath}/backend/user?page=${pageResult.pageNum - 1}">上一页</a>
+                    </c:if>
+                    <span class="current">${pageResult.pageNum} / ${pageResult.pages}</span>
+                    <c:if test="${pageResult.pageNum < pageResult.pages}">
+                        <a href="${pageContext.request.contextPath}/backend/user?page=${pageResult.pageNum + 1}">下一页</a>
+                    </c:if>
+                    <span>共 ${pageResult.total} 条</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

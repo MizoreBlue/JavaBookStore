@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%
     String ctx = request.getContextPath();
     if (ctx.equals("/") || ctx.equals("")) {
@@ -40,7 +40,7 @@
             <div class="logo"><a href="<%=ctx%>/" style="color: white; text-decoration: none;">图书商城</a></div>
             <div class="nav">
                 <a href="<%=ctx%>/product/list">商品列表</a>
-                <a href="<%=ctx%>/cart/list">购物车</a>
+                <a href="<%=ctx%>/cart?action=view">购物车</a>
                 <a href="<%=ctx%>/order/list">我的订单</a>
                 <c:if test="${sessionScope.user != null}">
                     <a href="<%=ctx%>/user/profile">欢迎: ${sessionScope.user.username}</a>

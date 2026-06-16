@@ -87,7 +87,7 @@ public class OrderService {
         order.setReceiverName(receiverName);
         order.setReceiverPhone(receiverPhone);
         order.setTotalAmount(total);
-        order.setStatus(1);
+        order.setStatus(2);
         order.setCreateTime(LocalDateTime.now());
         Long orderId = orderDAO.insert(order);
         for (Cart cart : cartList) {

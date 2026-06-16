@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="jakarta.tags.core" prefix="c" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -63,7 +63,23 @@
                             <span>用户: ${vo.user.username}</span>
                             <span>电话: ${vo.orders.receiverPhone}</span>
                             <span>时间: ${vo.orders.createTime}</span>
-                            <span class="status-badge ${vo.orders.status eq 1 ? 'status-done' : 'status-pending'}">${vo.orders.status eq 1 ? '已完成' : '处理中'}</span>
+                            <c:choose>
+                                <c:when test="${vo.orders.status eq 4}">
+                                    <span class="status-badge status-done">已完成</span>
+                                </c:when>
+                                <c:when test="${vo.orders.status eq 2}">
+                                    <span class="status-badge status-pending">处理中</span>
+                                </c:when>
+                                <c:when test="${vo.orders.status eq 3}">
+                                    <span class="status-badge status-done">已发货</span>
+                                </c:when>
+                                <c:when test="${vo.orders.status eq 0}">
+                                    <span class="status-badge" style="background:#95a5a6;">已取消</span>
+                                </c:when>
+                                <c:otherwise>
+                                    <span class="status-badge status-pending">待支付</span>
+                                </c:otherwise>
+                            </c:choose>
                         </div>
                         <div class="order-body">
                             <div class="book-list">
@@ -79,8 +95,8 @@
                             </div>
                             <div class="order-actions">
                                 <div class="order-amount">¥ ${vo.orders.totalAmount}</div>
-                                <c:if test="${vo.orders.status eq 0}">
-                                    <a href="${pageContext.request.contextPath}/backend/order?action=status&id=${vo.orders.id}&status=1" class="btn btn-success" onclick="return confirm('确认完成?')">标记完成</a>
+                                <c:if test="${vo.orders.status eq 2}">
+                                    <a href="${pageContext.request.contextPath}/backend/order?action=status&id=${vo.orders.id}&status=4" class="btn btn-success" onclick="return confirm('确认发货?')">发货</a>
                                 </c:if>
                                 <a href="${pageContext.request.contextPath}/backend/order?action=delete&id=${vo.orders.id}" class="btn btn-danger" onclick="return confirm('确认删除?')">删除</a>
                             </div>

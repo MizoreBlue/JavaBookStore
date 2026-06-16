@@ -12,5 +12,6 @@ public interface UserDAO {
     long count();
     void register(User user);
     boolean update(User user);
+    boolean updatePassword(Long id, String password);
     boolean delete(Long id);
 }

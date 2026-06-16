@@ -75,7 +75,7 @@ public class UserDAOImpl implements UserDAO {
 
     @Override
     public void register(User user) {
-        String sql = "INSERT INTO user (username, password, phone, email, sex, avatar, create_time) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO user (username, password, phone, email, sex, avatar, status, create_time) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         try {
             queryRunner.update(sql,
                     user.getUsername(),
@@ -84,6 +84,7 @@ public class UserDAOImpl implements UserDAO {
                     user.getEmail(),
                     user.getSex(),
                     user.getAvatar(),
+                    user.getStatus() != null ? user.getStatus() : 1,
                     user.getCreateTime());
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -92,10 +93,21 @@ public class UserDAOImpl implements UserDAO {
 
     @Override
     public boolean update(User user) {
-        String sql = "UPDATE user SET phone = ?, email = ?, sex = ?, avatar = ? WHERE id = ?";
+        String sql = "UPDATE user SET phone = ?, email = ?, sex = ?, avatar = ?, status = ? WHERE id = ?";
         try {
             int rows = queryRunner.update(sql,
-                    user.getPhone(), user.getEmail(), user.getSex(), user.getAvatar(), user.getId());
+                    user.getPhone(), user.getEmail(), user.getSex(), user.getAvatar(), user.getStatus(), user.getId());
+            return rows > 0;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public boolean updatePassword(Long id, String password) {
+        String sql = "UPDATE user SET password = ? WHERE id = ?";
+        try {
+            int rows = queryRunner.update(sql, password, id);
             return rows > 0;
         } catch (SQLException e) {
             throw new RuntimeException(e);

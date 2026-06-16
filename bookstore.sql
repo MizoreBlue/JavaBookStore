@@ -22,6 +22,7 @@ CREATE TABLE `user` (
   `email`       VARCHAR(64)  DEFAULT NULL COMMENT '邮箱',
   `sex`         VARCHAR(2)   DEFAULT NULL COMMENT '性别: M-男, F-女',
   `avatar`      VARCHAR(500) DEFAULT NULL COMMENT '头像URL',
+  `status`      TINYINT      NOT NULL DEFAULT 1 COMMENT '状态: 1-正常, 0-禁用',
   `create_time` DATETIME     DEFAULT NULL COMMENT '注册时间',
   PRIMARY KEY (`id`),
   UNIQUE KEY `idx_username` (`username`)
@@ -235,17 +236,17 @@ INSERT INTO `book` (`id`, `name`, `author`, `description`, `category`, `image`, 
 -- ---------------------------------------------------------
 -- 插入测试用户 (密码: 123456)
 -- ---------------------------------------------------------
-INSERT INTO `user` (`id`, `username`, `password`, `phone`, `email`, `sex`, `avatar`, `create_time`) VALUES
-(1, 'testuser', '123456', '13800138000', 'test@example.com', 'M', NULL, NOW()),
-(2, 'zhangsan', '123456', '13912345678', 'zhangsan@example.com', 'M', NULL, NOW()),
-(3, 'lisi', '123456', '13612345678', 'lisi@example.com', 'F', NULL, NOW());
+INSERT INTO `user` (`id`, `username`, `password`, `phone`, `email`, `sex`, `avatar`, `status`, `create_time`) VALUES
+(1, 'testuser', '123456', '13800138000', 'test@example.com', 'M', NULL, 1, NOW()),
+(2, 'zhangsan', '123456', '13912345678', 'zhangsan@example.com', 'M', NULL, 1, NOW()),
+(3, 'lisi', '123456', '13612345678', 'lisi@example.com', 'F', NULL, 1, NOW());
 
 -- ---------------------------------------------------------
 -- 插入示例订单数据（用于演示报表功能）
 -- ---------------------------------------------------------
 INSERT INTO `orders` (`id`, `total_amount`, `address`, `receiver_name`, `receiver_phone`, `user_id`, `status`, `create_time`) VALUES
 (1, 107.00, '北京市朝阳区某某路100号', '张三', '13800138000', 1, 4, DATE_SUB(NOW(), INTERVAL 5 DAY)),
-(2, 196.00, '上海市浦东新区某某路200号', '李四', '13912345678', 2, 3, DATE_SUB(NOW(), INTERVAL 3 DAY)),
+(2, 196.00, '上海市浦东新区某某路200号', '李四', '13912345678', 2, 2, DATE_SUB(NOW(), INTERVAL 3 DAY)),
 (3, 128.00, '广州市天河区某某路300号', '王五', '13612345678', 3, 2, DATE_SUB(NOW(), INTERVAL 1 DAY));
 
 INSERT INTO `order_detail` (`id`, `order_id`, `book_id`, `number`, `amount`, `image`) VALUES

@@ -41,6 +41,10 @@ public class UserService {
         return userDAO.update(user);
     }
 
+    public boolean updatePassword(Long id, String password) {
+        return userDAO.updatePassword(id, password);
+    }
+
     public boolean delete(Long id) {
         return userDAO.delete(id);
     }
